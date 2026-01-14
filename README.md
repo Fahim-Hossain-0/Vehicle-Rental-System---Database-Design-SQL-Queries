@@ -103,8 +103,8 @@ So, INNER JOIN shows common data, while LEFT JOIN shows all left table data.
 
 🔗 Resources
 
-GitHub Repository: https://github.com/your-username/your-repo-name
+GitHub Repository:https://github.com/Fahim-Hossain-0/Vehicle-Rental-System---Database-Design-SQL-Queries
 
-ERD Diagram: https://lucid.app/
+ERD Diagram: https://drawsql.app/teams/fahim735/diagrams/vehicle-rental-system
 
-Viva Video: https://drive.google.com/
+Viva Video: https://drive.google.com/file/d/1_wHhCY6R7eGQ8yxaRm7uFnucv_dM5LCB/view?usp=sharing
