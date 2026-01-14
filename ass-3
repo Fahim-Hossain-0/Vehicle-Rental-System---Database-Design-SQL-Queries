@@ -1,0 +1,110 @@
+/* ================================
+   USERS TABLE
+   Stores system users (Admin & Customer)
+================================ */
+CREATE TABLE users (
+  user_id SERIAL PRIMARY KEY,          
+  user_name VARCHAR(100) NOT NULL,     
+  email VARCHAR(200) UNIQUE NOT NULL,  
+  password TEXT NOT NULL,              
+  phone VARCHAR(25),                   
+  role VARCHAR(20) NOT NULL            
+    CHECK (role IN ('admin', 'customer'))
+);
+
+/* ================================
+   VEHICLES TABLE
+   Stores all rentable vehicles
+================================ */
+CREATE TABLE vehicles (
+  vehicle_id SERIAL PRIMARY KEY,       
+  vehicle_name VARCHAR(100) NOT NULL,  
+  type VARCHAR(20) NOT NULL,            
+  model VARCHAR(10) NOT NULL,           
+  registration_number VARCHAR(200) NOT NULL, 
+  rental_price INT NOT NULL,            
+  availability_status VARCHAR(30) NOT NULL   
+    CHECK (availability_status IN ('available', 'rented', 'maintenance'))
+);
+
+/* ================================
+   BOOKINGS TABLE
+   Stores booking information
+================================ */
+CREATE TABLE bookings (
+  booking_id SERIAL PRIMARY KEY,        
+  user_id INT NOT NULL                  
+    REFERENCES users (user_id),
+  vehicle_id INT NOT NULL               
+    REFERENCES vehicles (vehicle_id),
+  start_date DATE NOT NULL,             
+  end_date DATE NOT NULL,               
+  booking_status VARCHAR(20) NOT NULL   
+    CHECK (booking_status IN ('pending', 'confirmed', 'completed', 'canceled')),
+  total DECIMAL(10, 2) NOT NULL         
+);
+
+/* ================================
+   INSERT SAMPLE USERS
+================================ */
+INSERT INTO users (user_name, email, password, phone, role) VALUES
+('Fahim', 'fahim@gmail.com', 'pass123', '01711111111', 'customer'),
+('Arafat', 'arafat@gmail.com', 'pass123', '01722222222', 'customer'),
+('Admin', 'admin@gmail.com', 'admin123', '01733333333', 'admin');
+
+/* ================================
+   INSERT SAMPLE VEHICLES
+================================ */
+INSERT INTO vehicles (vehicle_name, type, model, registration_number, rental_price, availability_status) VALUES
+('Toyota Corolla', 'car', '2022', 'CAR-1001', 3000, 'available'),
+('Honda Civic', 'car', '2021', 'CAR-1002', 3500, 'rented'),
+('Yamaha R15', 'bike', '2020', 'BIKE-2001', 1200, 'available'),
+('Suzuki Truck', 'truck', '2019', 'TRUCK-3001', 6000, 'maintenance');
+
+/* ================================
+   INSERT SAMPLE BOOKINGS
+================================ */
+INSERT INTO bookings (user_id, vehicle_id, start_date, end_date, booking_status, total) VALUES
+(1, 1, '2024-01-01', '2024-01-03', 'confirmed', 9000),
+(2, 1, '2024-02-01', '2024-02-02', 'completed', 6000),
+(1, 1, '2024-03-01', '2024-03-04', 'completed', 12000),
+(2, 2, '2024-01-10', '2024-01-12', 'confirmed', 7000);
+
+/* ================================
+   QUERY 1: JOIN
+   Show which user booked which vehicle
+================================ */
+SELECT user_name, vehicle_name
+FROM users
+INNER JOIN bookings ON users.user_id = bookings.user_id
+INNER JOIN vehicles ON vehicles.vehicle_id = bookings.vehicle_id;
+
+/* ================================
+   QUERY 2: EXISTS
+   Find vehicles that have never been booked
+================================ */
+SELECT *
+FROM vehicles
+WHERE NOT EXISTS (
+  SELECT 1
+  FROM bookings
+  WHERE vehicles.vehicle_id = bookings.vehicle_id
+);
+
+/* ================================
+   QUERY 3: WHERE
+   Available cars only
+================================ */
+SELECT *
+FROM vehicles
+WHERE type = 'car'
+AND availability_status = 'available';
+
+/* ================================
+   QUERY 4: GROUP BY + HAVING
+   Vehicles booked more than 2 times
+================================ */
+SELECT vehicle_id, COUNT(booking_id)
+FROM bookings
+GROUP BY vehicle_id
+HAVING COUNT(booking_id) > 2;
