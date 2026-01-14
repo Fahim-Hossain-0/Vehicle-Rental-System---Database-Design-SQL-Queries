@@ -59,10 +59,12 @@ GROUP BY vehicle_id
 HAVING COUNT(booking_id) > 2;
 
 
+---
+
 ## 🔗 Resources
 
-| Resource          | Link |
-|------------------|------|
-| GitHub Repository | [GitHub Repo](#) |
-| ERD Diagram       | [ERD Link](#) |
-| Viva Video        | [Viva Video](#) |
+| Resource        | Link |
+|-----------------|------|
+| GitHub Repository | [GitHub Repo](https://github.com/your-username/your-repo-name) |
+| ERD Diagram       | [ERD Link](https://lucid.app/) |
+| Viva Video        | [Viva Video](https://drive.google.com/) |
